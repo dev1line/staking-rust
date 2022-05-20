@@ -5,6 +5,8 @@ use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{
     env, near_bindgen, AccountId, Balance, BlockHeight, BorshStorageKey, EpochHeight,
     PanicOnDefault,
+    Promise,
+    PromiseOrValue
 };
 
 use crate::config::*;
@@ -17,11 +19,28 @@ use crate::internal::*;
 mod internal;
 use crate::enumuration::*;
 mod enumuration;
-
+use crate::core_impl::*;
+mod core_impl;
 #[derive(BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
     AccountKey,
 }
+
+// #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
+// pub struct StakingContractV1 {
+//     pub owner_id: AccountId,
+//     pub ft_contract_id: AccountId,
+//     pub config: Config,
+//     pub total_stake_balance: Balance,
+//     pub total_paid_reward_balance: Balance,
+//     pub total_stakers: Balance,
+//     pub pre_reward: Balance,
+//     pub last_block_balance_change: BlockHeight,
+//     pub accounts: LookupMap<AccountId, Account>,
+//     pub paused: bool,
+//     pub pause_in_block: BlockHeight,
+// }
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct StakingContract {
@@ -36,6 +55,7 @@ pub struct StakingContract {
     pub accounts: LookupMap<AccountId, Account>,
     pub paused: bool,
     pub pause_in_block: BlockHeight,
+    // pub new_data: U128(0)
 }
 #[near_bindgen]
 impl StakingContract {
@@ -95,6 +115,9 @@ impl StakingContract {
     pub fn is_paused(&self) -> bool {
         self.paused
     }
+    // #[private]
+    // #[init(ignore_state)]
+    // pub fn migrate(&)
 }
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
